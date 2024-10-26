@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../common/color_extension.dart';
+import 'package:trackizer/generated//l10n.dart';
 
 class ItemRow extends StatelessWidget {
   final String title;
@@ -20,12 +21,12 @@ class ItemRow extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Edit $title"),
+        title: Text("${S.of(context).edit} $title"),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.text,
-          decoration: const InputDecoration(
-            labelText: "Enter new value",
+          decoration: InputDecoration(
+            labelText: S.of(context).enter_new_value,
           ),
         ),
         actions: [
@@ -33,14 +34,14 @@ class ItemRow extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context); // Popup'ı kapatır.
             },
-            child: const Text("Cancel"),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
               onValueChanged(controller.text); // Yeni değeri gönderir.
               Navigator.pop(context);
             },
-            child: const Text("Save"),
+            child: Text(S.of(context).save),
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class SubscriptionCell extends StatelessWidget {
@@ -44,7 +44,7 @@ class SubscriptionCell extends StatelessWidget {
               width: 8,
             ),
             Text(
-              "\$${sObj["price"]}",
+              "${S.of(context).currency}${sObj["price"]}",
               style: TextStyle(
                 color: TColor.white,
                 fontSize: 20,

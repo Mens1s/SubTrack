@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class BudgetsRow extends StatelessWidget {
@@ -59,7 +59,7 @@ class BudgetsRow extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "\$${bObj["left_amount"]} left to spent",
+                          "${S.of(context).currency}${bObj["left_amount"]} ${S.of(context).left_to_spent}",
                           style: TextStyle(
                             color: TColor.gray30,
                             fontSize: 12,
@@ -77,7 +77,7 @@ class BudgetsRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "\$${bObj["spend_amount"]}",
+                        "${S.of(context).currency}${bObj["spend_amount"]}",
                         style: TextStyle(
                           color: TColor.white,
                           fontSize: 14,
@@ -85,7 +85,7 @@ class BudgetsRow extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "of \$${bObj["total_budget"]}",
+                        "of ${S.of(context).currency}${bObj["total_budget"]}",
                         style: TextStyle(
                           color: TColor.gray30,
                           fontSize: 12,

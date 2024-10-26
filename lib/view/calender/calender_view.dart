@@ -4,7 +4,7 @@ import 'package:calendar_agenda/calendar_agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trackizer/common/color_extension.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../../common_widget/subscription_cell.dart';
 
 class CalenderView extends StatefulWidget {
@@ -73,7 +73,7 @@ class _CalenderViewState extends State<CalenderView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Calender",
+                                    S.of(context).calender,
                                     style: TextStyle(
                                         color: TColor.gray30, fontSize: 16),
                                   ),
@@ -87,7 +87,7 @@ class _CalenderViewState extends State<CalenderView> {
                             height: 20,
                           ),
                           Text(
-                            "Subs\nSchedule",
+                            S.of(context).subs_schedule,
                             style: TextStyle(
                                 color: TColor.white,
                                 fontSize: 40,
@@ -100,7 +100,7 @@ class _CalenderViewState extends State<CalenderView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "3 subscription for today",
+                                "3 "+ S.of(context).subscription_for_today,
                                 style: TextStyle(
                                     color: TColor.gray30,
                                     fontSize: 14,
@@ -149,7 +149,7 @@ class _CalenderViewState extends State<CalenderView> {
                       controller: calendarAgendaControllerNotAppBar,
                       backgroundColor: Colors.transparent,
                       fullCalendarBackgroundColor: TColor.gray80,
-                      locale: 'en',
+                      locale: S.current.cancel.compareTo("cancel") == 0 ? 'en' : 'tr',
                       weekDay: WeekDay.short,
                       fullCalendarDay: WeekDay.short,
                       selectedDateColor: TColor.white,
@@ -223,7 +223,7 @@ class _CalenderViewState extends State<CalenderView> {
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "\$24.98",
+                        "${S.of(context).currency}24.98",
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 20,
@@ -242,7 +242,7 @@ class _CalenderViewState extends State<CalenderView> {
                             fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        "in upcoming bills",
+                        S.of(context).in_upcoming_bills,
                         style: TextStyle(
                             color: TColor.gray30,
                             fontSize: 12,

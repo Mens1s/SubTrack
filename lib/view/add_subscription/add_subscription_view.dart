@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/primary_button.dart';
 import 'package:trackizer/common_widget/round_textfield.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../../common_widget/image_button.dart';
 
 class AddSubScriptionView extends StatefulWidget {
@@ -81,7 +81,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "New",
+                              S.of(context).newS,
                               style:
                               TextStyle(color: TColor.gray30, fontSize: 16),
                             )
@@ -92,7 +92,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Text(
-                        "Add new\n subscription",
+                        S.of(context).add_new_subscription,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: TColor.white,
@@ -150,7 +150,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
 
             Padding(
                 padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                child: RoundTextField(title: "Description", titleAlign: TextAlign.center,controller: txtDescription )
+                child: RoundTextField(title: S.of(context).description, titleAlign: TextAlign.center,controller: txtDescription )
             ),
 
             Padding(
@@ -171,7 +171,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                   Column(
                     children: [
                       Text(
-                        "Monthly price",
+                        S.of(context).monthly_price,
                         style: TextStyle(
                             color: TColor.gray40,
                             fontSize: 12,
@@ -227,7 +227,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child:
-              PrimaryButton(title: "Add this platform", onPressed: () {}),
+              PrimaryButton(title: S.of(context).add_this_platform, onPressed: () {}),
             ),
             const SizedBox(
               height: 20,

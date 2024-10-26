@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/item_row.dart';
 import 'package:trackizer/common_widget/secondary_button.dart';
+import 'package:trackizer/generated//l10n.dart';
 
 class SubscriptionInfoView extends StatefulWidget {
   final Map sObj;
@@ -15,7 +16,7 @@ class SubscriptionInfoView extends StatefulWidget {
 }
 
 class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
-  String currencyValue = "USD (\$)";
+  String currencyValue = "Para (TRY)";
 
   void _updateCurrency(String newValue) {
     setState(() {
@@ -25,6 +26,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.sizeOf(context);
+    currencyValue = "Curr: (${S.of(context).currency})";
     return Scaffold(
       backgroundColor: TColor.gray,
       body: SingleChildScrollView(
@@ -64,7 +66,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                                     color: TColor.gray30),
                               ),
                               Text(
-                                "Subscription Info",
+                                S.of(context).subscription_info,
                                 style: TextStyle(
                                     color: TColor.gray30, fontSize: 16),
                               ),
@@ -100,7 +102,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             height: 15,
                           ),
                           Text(
-                            "\$${widget.sObj["price"]}",
+                            "${S.of(context).currency} ${widget.sObj["price"]}",
                             style: TextStyle(
                               color: TColor.gray30,
                               fontSize: 20,
@@ -139,7 +141,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                                     onValueChanged: _updateCurrency),
                                 ItemRow(title: "Reminder", value: "Never",
                                     onValueChanged: _updateCurrency),
-                                ItemRow(title: "Currency", value: "USD (\$)",
+                                ItemRow(title: "Currency", value: "${S.of(context).currency}",
                                     onValueChanged: _updateCurrency),
                               ],
                             ),
@@ -147,7 +149,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                           const SizedBox(
                             height: 20,
                           ),
-                          SecondaryButton(title: "Save", onPressed: () {})
+                          SecondaryButton(title: S.of(context).save, onPressed: () {})
                         ],
                       ),
                     ),

@@ -5,8 +5,9 @@ import 'package:trackizer/common_widget/primary_button.dart';
 import 'package:trackizer/common_widget/secondary_button.dart';
 import 'package:trackizer/view/login/sign_in_view.dart';
 import 'package:trackizer/view/login/social_login.dart';
-
+import 'package:trackizer/view/main_tab/main_tab_view.dart';
 import '../../common/color_extension.dart';
+import 'package:trackizer/generated//l10n.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({super.key});
@@ -44,7 +45,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                     width: media.width * 0.5, fit: BoxFit.contain),
                 const Spacer(),
                 Text(
-                  "Tüm Harcamalarınızı Tek Çatı Altında\n Kontrol Etmeye Ne Dersiniz?",
+                  S.of(context).welcome_screen_message,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: TColor.white, fontSize: 14),
                 ),
@@ -52,28 +53,19 @@ class _WelcomeViewState extends State<WelcomeView> {
                   height: 30,
                 ),
                 PrimaryButton(
-                  title: "Hadi Başlayalım",
+                  title: S.of(context).lets_start,
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SocialLogin()));
+                            builder: (context) => const MainTabView()));
                   },
                   fontSize: 16,
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                SecondaryButton(
-                  title: "Hesabım var.",
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignInView()));
-                  },
-                  fontSize: 16,
-                ),
+
               ],
             ),
           ),

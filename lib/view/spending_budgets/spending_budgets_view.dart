@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/budgets_row.dart';
 import 'package:trackizer/common_widget/custom_arc_180_painter.dart';
+import 'package:trackizer/generated//l10n.dart';
 
 class SpendingBudgetsView extends StatefulWidget {
   const SpendingBudgetsView({super.key});
@@ -73,7 +74,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                 Column(
                   children: [
                     Text(
-                      "\$82,90",
+                      "${S.of(context).currency}82,90",
                       style: TextStyle(
                         color: TColor.white,
                         fontSize: 24,
@@ -81,7 +82,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                       ),
                     ),
                     Text(
-                      "of \$2000,00 budget",
+                      "/ ${S.of(context).currency}2000,00 "+ S.of(context).budget,
                       style: TextStyle(
                         color: TColor.gray30,
                         fontSize: 12,
@@ -114,7 +115,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Your budgets are on tack 👍",
+                        S.of(context).y_budget_on_tack + " 👍",
                         style: TextStyle(
                           color: TColor.white,
                           fontSize: 14,
@@ -160,7 +161,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Add new category ",
+                          S.of(context).add_new_category,
                           style: TextStyle(
                             color: TColor.gray30,
                             fontSize: 14,

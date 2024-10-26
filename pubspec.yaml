@@ -30,13 +30,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
+  intl_utils: ^2.8.7
 
+  provider: ^6.1.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   dotted_border: ^2.0.0+3
-  intl: ^0.18.0
+  intl: ^0.19.0
   carousel_slider: ^5.0.0
   card_swiper:
     path: dev_lib/card_swiper

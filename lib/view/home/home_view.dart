@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/view/subscription_info/subscription_info_view.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../../common_widget/customer_arc_painter.dart';
 import '../../common_widget/segment_button.dart';
 import '../../common_widget/status_button.dart';
@@ -57,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           children: [
             Container(
-              height: media.width * 1.1,
+              height: media.width * 0.95,
               decoration: BoxDecoration(
                 color: TColor.gray70.withOpacity(0.5),
                 borderRadius: const BorderRadius.only(
@@ -83,32 +83,32 @@ class _HomeViewState extends State<HomeView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        height: media.width * 0.05,
+                        height: media.width * 0.01,
                       ),
                       Image.asset("assets/img/app_logo.png",
                           width: media.width * 0.25, fit: BoxFit.contain),
                       SizedBox(
-                        height: media.width * 0.07,
+                        height: media.width * 0.05,
                       ),
                       Text(
-                        "\$2,002",
+                        "${S.of(context).currency}2,002",
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 40,
                             fontWeight: FontWeight.w700),
                       ),
                       SizedBox(
-                        height: media.width * 0.055,
+                        height: media.width * 0.05,
                       ),
                       Text(
-                        "Bu ayki harcamalar",
+                        S.of(context).monthly_expenses,
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: media.width * 0.07,
+                        height: media.width * 0.065,
                       ),
                       InkWell(
                         onTap: () {},
@@ -121,7 +121,7 @@ class _HomeViewState extends State<HomeView> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            "Cüzdanını Görüntüle",
+                            S.of(context).view_your_wallet,
                             style: TextStyle(
                               color: TColor.white,
                               fontSize: 12,
@@ -141,7 +141,7 @@ class _HomeViewState extends State<HomeView> {
                           children: [
                             Expanded(
                               child: StatusButton(
-                                title: "Active subs",
+                                title: S.of(context).active_subs,
                                 value: "12",
                                 statusColor: TColor.secondary,
                                 onPressed: () {},
@@ -152,8 +152,8 @@ class _HomeViewState extends State<HomeView> {
                             ),
                             Expanded(
                               child: StatusButton(
-                                title: "Highest sub",
-                                value: "\$19.99",
+                                title: S.of(context).highest_sub,
+                                value: "${S.of(context).currency}19.99",
                                 statusColor: TColor.primary10,
                                 onPressed: () {},
                               ),
@@ -163,8 +163,8 @@ class _HomeViewState extends State<HomeView> {
                             ),
                             Expanded(
                               child: StatusButton(
-                                title: "Lowest subs",
-                                value: "\$5.99",
+                                title: S.of(context).lowest_sub,
+                                value: "${S.of(context).currency}5.99",
                                 statusColor: TColor.secondaryG,
                                 onPressed: () {},
                               ),
@@ -187,7 +187,7 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   Expanded(
                     child: SegmentButton(
-                      title: "Üyeliklerin",
+                      title: S.of(context).memberships,
                       isActive: isSubscription,
                       onPressed: () {
                         setState(() {
@@ -198,7 +198,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   Expanded(
                     child: SegmentButton(
-                      title: "Yaklaşan Ödemeler",
+                      title: S.of(context).upcoming_bills,
                       isActive: !isSubscription,
                       onPressed: () {
                         setState(() {

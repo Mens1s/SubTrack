@@ -6,6 +6,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/view/calender/calender_view.dart';
+import 'package:trackizer/generated//l10n.dart';
 
 class CardsView extends StatefulWidget {
   const CardsView({super.key});
@@ -161,27 +162,27 @@ class _CardsViewState extends State<CardsView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Add New Card"),
+        title: Text(S.of(context).add_new_card),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: "Card Name"),
+              decoration: InputDecoration(labelText: S.of(context).card_name),
             ),
             TextField(
               controller: holderNameController,
-              decoration: const InputDecoration(labelText: "Holder Name"),
+              decoration: InputDecoration(labelText: S.of(context).holder_name),
             ),
             TextField(
               controller: numberController,
-              decoration: const InputDecoration(labelText: "Last 4 Digits"),
+              decoration: InputDecoration(labelText: S.of(context).last_4_digits),
               keyboardType: TextInputType.number,
               maxLength: 4,
             ),
             TextField(
               controller: expiryController,
-              decoration: const InputDecoration(labelText: "Expiry Date (MM/YY)"),
+              decoration:  InputDecoration(labelText: S.of(context).exp_date),
               keyboardType: TextInputType.datetime,
             ),
           ],
@@ -189,7 +190,7 @@ class _CardsViewState extends State<CardsView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -235,7 +236,7 @@ class _CardsViewState extends State<CardsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Credit Cards",
+                            S.of(context).credit_cards,
                             style:
                             TextStyle(color: TColor.gray30, fontSize: 16),
                           ),
@@ -261,11 +262,11 @@ class _CardsViewState extends State<CardsView> {
                 ),
 
                 const SizedBox(
-                  height: 420,
+                  height: 460,
                 ),
 
                 Text(
-                  "Subscriptions",
+                  S.of(context).subscriptions,
                   style: TextStyle(
                       color: TColor.white,
                       fontSize: 18,
@@ -287,11 +288,11 @@ class _CardsViewState extends State<CardsView> {
                 ),
 
                 const SizedBox(
-                  height: 80,
+                  height: 40,
                 ),
 
                 Container(
-                  height: 180,
+                  height: 240,
                   decoration: BoxDecoration(
                       color: TColor.gray70.withOpacity(0.5),
                       borderRadius: const BorderRadius.only(
@@ -324,7 +325,7 @@ class _CardsViewState extends State<CardsView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Add new card",
+                                  S.of(context).add_new_card,
                                   style: TextStyle(
                                       color: TColor.gray30,
                                       fontSize: 16,
