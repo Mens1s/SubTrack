@@ -1,23 +1,15 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:trackizer/Enum/SubscriptionType.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/item_color_row.dart';
-import 'package:trackizer/common_widget/item_date_select_row.dart';
 import 'package:trackizer/common_widget/item_double_row.dart';
 import 'package:trackizer/common_widget/item_row.dart';
-import 'package:trackizer/common_widget/multi_select_category_row.dart';
-import 'package:trackizer/common_widget/multi_select_curr_row.dart';
 import 'package:trackizer/common_widget/multi_select_icon_row.dart';
-import 'package:trackizer/common_widget/multi_select_subs_status_row.dart';
 import 'package:trackizer/common_widget/secondary_button.dart';
 import 'package:trackizer/entities/Categories.dart';
-import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/generated//l10n.dart';
 import 'package:trackizer/services/CategoriesService.dart';
-import 'package:trackizer/services/SubscriptionService.dart';
 
 class CategoryAddView extends StatefulWidget {
   const CategoryAddView({super.key});
@@ -119,7 +111,7 @@ class _CategoryAddViewState extends State<CategoryAddView> {
                                     color: TColor.gray30),
                               ),
                               Text(
-                                "Kategori Ekleme",
+                                S.of(context).add_new_category,
                                 style: TextStyle(
                                     color: TColor.gray30, fontSize: 16),
                               ),
@@ -180,7 +172,7 @@ class _CategoryAddViewState extends State<CategoryAddView> {
                             child: Column(
                               children: [
                                 ItemRow(
-                                    title: "Name",
+                                    title: S.of(context).name,
                                     value: nameValue,
                                     onValueChanged: updateNameValue),
                                 MultiSelectIconRow(
@@ -188,11 +180,11 @@ class _CategoryAddViewState extends State<CategoryAddView> {
                                     selectedValue: iconVisibleValue,
                                     onValueChanged: updateIconValue),
                                 ItemDoubleRow(
-                                    title: "Budget",
+                                    title: S.of(context).budget,
                                     value: budgetValue,
                                     onValueChanged: updateBudgetValue),
                                 ItemColorRow(
-                                    title: "Color",
+                                    title: S.of(context).color,
                                     value: colorValue,
                                     onValueChanged: updateColorValue),
                               ],
@@ -221,13 +213,13 @@ class _CategoryAddViewState extends State<CategoryAddView> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(
-                                          'Subscription updated successfully!')),
+                                          S.of(context).success)),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(
-                                          'Please fill all fields before saving.')),
+                                          S.of(context).field_not_null)),
                                 );
                               }
                             },

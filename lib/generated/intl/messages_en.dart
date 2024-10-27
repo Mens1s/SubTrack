@@ -31,10 +31,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_this_platform":
             MessageLookupByLibrary.simpleMessage("Add this platform"),
         "budget": MessageLookupByLibrary.simpleMessage("budget"),
+        "budget_not_fit": MessageLookupByLibrary.simpleMessage(
+            "Enter valid budget. Bigger than 0"),
         "calender": MessageLookupByLibrary.simpleMessage("Calender"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "card_name": MessageLookupByLibrary.simpleMessage("Card Name"),
+        "card_not_null":
+            MessageLookupByLibrary.simpleMessage("Card cannot be null."),
+        "cat_not_null":
+            MessageLookupByLibrary.simpleMessage("Category cannot be null."),
         "category": MessageLookupByLibrary.simpleMessage("category"),
+        "color": MessageLookupByLibrary.simpleMessage("Color"),
         "credit_cards": MessageLookupByLibrary.simpleMessage("Credit Cards"),
         "currency": MessageLookupByLibrary.simpleMessage("\$"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
@@ -42,6 +49,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_new_value":
             MessageLookupByLibrary.simpleMessage("Enter new value"),
         "exp_date": MessageLookupByLibrary.simpleMessage("Expiry Date (MM/YY)"),
+        "field_not_null":
+            MessageLookupByLibrary.simpleMessage("Field cannot be null."),
         "highest_sub": MessageLookupByLibrary.simpleMessage("Highest sub"),
         "holder_name": MessageLookupByLibrary.simpleMessage("Holder Name"),
         "in_upcoming_bills":
@@ -54,10 +63,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "memberships": MessageLookupByLibrary.simpleMessage("Memberships"),
         "monthly_expenses":
             MessageLookupByLibrary.simpleMessage("Monthly Expenses"),
+        "monthly_payment_date":
+            MessageLookupByLibrary.simpleMessage("Monthly payment date"),
         "monthly_price": MessageLookupByLibrary.simpleMessage("Monthly price"),
+        "monthly_sub_count":
+            MessageLookupByLibrary.simpleMessage(" Monthly subscription"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newS": MessageLookupByLibrary.simpleMessage("New"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "selected_color":
+            MessageLookupByLibrary.simpleMessage("Selected Color"),
+        "sub_start_date_choose": MessageLookupByLibrary.simpleMessage(
+            "Select Subscription Start Date"),
         "subs_schedule":
             MessageLookupByLibrary.simpleMessage("Subs\\nSchedule"),
         "subscription_for_today":
@@ -65,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subscription_info":
             MessageLookupByLibrary.simpleMessage("Subscription Info"),
         "subscriptions": MessageLookupByLibrary.simpleMessage("Subscriptions"),
+        "success": MessageLookupByLibrary.simpleMessage(
+            "Your operations done successfully."),
         "upcoming_bills":
             MessageLookupByLibrary.simpleMessage("Upcoming Bills"),
         "view_your_wallet":

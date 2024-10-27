@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Tarih formatlamak için
 import '../common/color_extension.dart';
-import 'package:trackizer/generated/l10n.dart';
 
 class ItemDateSelectRow extends StatelessWidget {
   final String title;

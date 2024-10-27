@@ -73,8 +73,8 @@ class CustomDialog extends StatelessWidget {
                 // Hata kontrolleri
                 if (categoryName.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Kategori adı boş olamaz."),
+                    SnackBar(
+                      content: Text(S.of(context).field_not_null),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -83,8 +83,8 @@ class CustomDialog extends StatelessWidget {
 
                 if (budget == null || budget <= 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Geçerli bir bütçe girin."),
+                     SnackBar(
+                      content: Text(S.of(context).budget_not_fit),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -111,8 +111,8 @@ class CustomDialog extends StatelessWidget {
 
                 // Başarılı bir şekilde eklendiğinde kullanıcıya bildirim yap
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Kategori başarıyla eklendi."),
+                  SnackBar(
+                    content: Text(S.of(context).success),
                     backgroundColor: Colors.green,
                   ),
                 );

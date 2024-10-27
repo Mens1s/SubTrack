@@ -1,6 +1,4 @@
-import 'dart:math';
-
-import 'package:calendar_agenda/calendar_agenda.dart';
+import 'package:trackizer/generated//l10n.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +7,6 @@ import 'package:trackizer/entities/CreditCard.dart';
 import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/services/CreditCardService.dart';
 import 'package:trackizer/services/SubscriptionService.dart';
-import 'package:trackizer/view/calender/calender_view.dart';
-import 'package:trackizer/generated//l10n.dart';
 
 class CardsView extends StatefulWidget {
   const CardsView({super.key});
@@ -212,8 +208,8 @@ class _CardsViewState extends State<CardsView> {
 
                 if (cardName.isEmpty || cardHolderName.isEmpty || lastFourDigit.isEmpty || expDate.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Lütfen tüm alanları doldurun!'),
+                     SnackBar(
+                      content: Text(S.of(context).field_not_null),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -238,8 +234,8 @@ class _CardsViewState extends State<CardsView> {
 
                   // Başarılı mesajı göster
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Kredi kartı başarıyla eklendi!'),
+                    SnackBar(
+                      content: Text(S.of(context).success),
                       backgroundColor: Colors.green,
                     ),
                   );

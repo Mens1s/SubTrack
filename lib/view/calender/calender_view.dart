@@ -156,7 +156,7 @@ class _CalenderViewState extends State<CalenderView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                monthlySubsCount.toString() + " Bu ayki abonelik",
+                                monthlySubsCount.toString() + S.of(context).monthly_sub_count,
                                 style: TextStyle(
                                     color: TColor.gray30,
                                     fontSize: 14,

@@ -32,10 +32,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_this_platform":
             MessageLookupByLibrary.simpleMessage("Bu platformu ekle"),
         "budget": MessageLookupByLibrary.simpleMessage("bütçe"),
+        "budget_not_fit": MessageLookupByLibrary.simpleMessage(
+            "Geçerli Bir Bütçe Giriniz. 0 Dan büyük değerler."),
         "calender": MessageLookupByLibrary.simpleMessage("Takvim"),
         "cancel": MessageLookupByLibrary.simpleMessage("İptal"),
         "card_name": MessageLookupByLibrary.simpleMessage("Kart Adı"),
+        "card_not_null": MessageLookupByLibrary.simpleMessage(
+            "Kart seçiniz veya ekleyiniz."),
+        "cat_not_null": MessageLookupByLibrary.simpleMessage(
+            "Kategori seçiniz veya ekleyiniz."),
         "category": MessageLookupByLibrary.simpleMessage("Kategori"),
+        "color": MessageLookupByLibrary.simpleMessage("Renk"),
         "credit_cards": MessageLookupByLibrary.simpleMessage("Kredi Kartları"),
         "currency": MessageLookupByLibrary.simpleMessage("₺"),
         "description": MessageLookupByLibrary.simpleMessage("Açıklama"),
@@ -44,6 +51,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Yeni değer girin"),
         "exp_date":
             MessageLookupByLibrary.simpleMessage("Son Kullanma (AA/YY)"),
+        "field_not_null":
+            MessageLookupByLibrary.simpleMessage("Alanlar boş olamaz."),
         "highest_sub":
             MessageLookupByLibrary.simpleMessage("En yüksek abonelik"),
         "holder_name": MessageLookupByLibrary.simpleMessage("Kart Sahibi"),
@@ -56,10 +65,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "memberships": MessageLookupByLibrary.simpleMessage("Üyelikler"),
         "monthly_expenses":
             MessageLookupByLibrary.simpleMessage("Aylık Giderler"),
+        "monthly_payment_date":
+            MessageLookupByLibrary.simpleMessage("Aylık ödeme tarihi"),
         "monthly_price": MessageLookupByLibrary.simpleMessage("Aylık fiyat"),
+        "monthly_sub_count":
+            MessageLookupByLibrary.simpleMessage("Bu ayki abonelik"),
         "name": MessageLookupByLibrary.simpleMessage("İsim"),
         "newS": MessageLookupByLibrary.simpleMessage("Yeni"),
         "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
+        "selected_color": MessageLookupByLibrary.simpleMessage("Seçilen Renk"),
+        "sub_start_date_choose": MessageLookupByLibrary.simpleMessage(
+            "Abonelik Başlangıç Tarihini Seçiniz"),
         "subs_schedule":
             MessageLookupByLibrary.simpleMessage("Abonelik\nPlanı"),
         "subscription_for_today":
@@ -67,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subscription_info":
             MessageLookupByLibrary.simpleMessage("Abonelik Bilgisi"),
         "subscriptions": MessageLookupByLibrary.simpleMessage("Abonelikler"),
+        "success": MessageLookupByLibrary.simpleMessage(
+            "İşlemleriniz başarıyla gerçekleştirildi."),
         "upcoming_bills":
             MessageLookupByLibrary.simpleMessage("Gelecek Faturalar"),
         "view_your_wallet":

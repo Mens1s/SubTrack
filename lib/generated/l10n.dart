@@ -429,6 +429,106 @@ class S {
       args: [],
     );
   }
+
+  /// `Selected Color`
+  String get selected_color {
+    return Intl.message(
+      'Selected Color',
+      name: 'selected_color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Subscription Start Date`
+  String get sub_start_date_choose {
+    return Intl.message(
+      'Select Subscription Start Date',
+      name: 'sub_start_date_choose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category cannot be null.`
+  String get cat_not_null {
+    return Intl.message(
+      'Category cannot be null.',
+      name: 'cat_not_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Card cannot be null.`
+  String get card_not_null {
+    return Intl.message(
+      'Card cannot be null.',
+      name: 'card_not_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Field cannot be null.`
+  String get field_not_null {
+    return Intl.message(
+      'Field cannot be null.',
+      name: 'field_not_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your operations done successfully.`
+  String get success {
+    return Intl.message(
+      'Your operations done successfully.',
+      name: 'success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` Monthly subscription`
+  String get monthly_sub_count {
+    return Intl.message(
+      ' Monthly subscription',
+      name: 'monthly_sub_count',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color`
+  String get color {
+    return Intl.message(
+      'Color',
+      name: 'color',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter valid budget. Bigger than 0`
+  String get budget_not_fit {
+    return Intl.message(
+      'Enter valid budget. Bigger than 0',
+      name: 'budget_not_fit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly payment date`
+  String get monthly_payment_date {
+    return Intl.message(
+      'Monthly payment date',
+      name: 'monthly_payment_date',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

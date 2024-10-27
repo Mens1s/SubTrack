@@ -36,5 +36,16 @@
   "lets_start": "Let's Get Started",
   "currency": "$",
   "name": "Name",
-  "category": "category"
+  "category": "category",
+  "selected_color": "Selected Color",
+  "sub_start_date_choose": "Select Subscription Start Date",
+  "cat_not_null": "Category cannot be null.",
+  "card_not_null": "Card cannot be null.",
+  "field_not_null": "Field cannot be null.",
+  "success": "Your operations done successfully.",
+  "monthly_sub_count"  : " Monthly subscription",
+  "color"  : "Color",
+  "budget_not_fit" : "Enter valid budget. Bigger than 0",
+  "monthly_payment_date" : "Monthly payment date"
+
 }

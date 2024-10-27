@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackizer/Enum/SubscriptionType.dart';
-import 'package:trackizer/entities/Categories.dart';
+import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class MultiSelectCurrRow extends StatelessWidget {
@@ -41,7 +40,7 @@ class MultiSelectCurrRow extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context); // Popup'ı kapatır.
             },
-            child: const Text("İptal"),
+            child: Text(S.of(context).cancel),
           ),
         ],
       ),

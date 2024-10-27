@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class ItemDoubleRow extends StatelessWidget {
@@ -20,12 +20,12 @@ class ItemDoubleRow extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("$title"),
+        title: Text("${S.of(context).edit} $title"),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number, // Sayı girişi için
           decoration: InputDecoration(
-            labelText: "S.of(context).enter_new_value",
+            labelText: S.of(context).enter_new_value,
           ),
         ),
         actions: [
@@ -33,7 +33,7 @@ class ItemDoubleRow extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context); // Popup'ı kapatır.
             },
-            child: Text("S.of(context).cancel"),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
@@ -43,7 +43,7 @@ class ItemDoubleRow extends StatelessWidget {
               }
               Navigator.pop(context);
             },
-            child: Text("S.of(context).save"),
+            child: Text(S.of(context).save),
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart'; // Renk seçici için
-
+import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class ItemColorRow extends StatelessWidget {
@@ -42,14 +42,14 @@ class ItemColorRow extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context); // Popup'ı kapatır.
             },
-            child: Text("Cancel"),
+            child: Text(S.of(context).cancel),
           ),
           TextButton(
             onPressed: () {
               onValueChanged(selectedColor); // Yeni rengi gönderir
               Navigator.pop(context);
             },
-            child: Text("Save"),
+            child: Text(S.of(context).save),
           ),
         ],
       ),
@@ -77,7 +77,7 @@ class ItemColorRow extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 color: value, // Mevcut rengi göster
                 child: Text(
-                  'Selected Color', // Renk ismini veya gösterimi buraya ekleyebilirsiniz
+                  S.of(context).selected_color, // Renk ismini veya gösterimi buraya ekleyebilirsiniz
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     color: TColor.gray30,

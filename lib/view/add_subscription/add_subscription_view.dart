@@ -265,7 +265,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
             Padding(
               padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
               child: RoundDateField(
-                title: "Başlangıç Tarihi Seçin",
+                title: S.of(context).sub_start_date_choose,
                 titleAlign: TextAlign.center, // Başlık metnini ortalamak için
                 controller: txtDate,
               ),
@@ -425,24 +425,24 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
 
                   if (selectedCategory == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Category cannot be null."),
+                      SnackBar(
+                        content: Text(S.of(context).cat_not_null),
                         backgroundColor: Colors.red,
                       ),
                     );
                     return;
                   } else if (selectedCard == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Card cannot be null.'),
+                      SnackBar(
+                        content: Text(S.of(context).card_not_null),
                         backgroundColor: Colors.red,
                       ),
                     );
                     return;
                   } else if (txtName.text.isEmpty || txtDate.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Field cannot be null.'),
+                      SnackBar(
+                        content: Text(S.of(context).field_not_null),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -473,8 +473,8 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
 
                           await service.addSubscription(subscription);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Başarıyla eklendi!"),
+                            SnackBar(
+                              content: Text(S.of(context).success),
                               backgroundColor: Colors.green,
                             ),
                           );

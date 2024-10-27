@@ -1,14 +1,12 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:trackizer/Enum/SubscriptionType.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/item_date_select_row.dart';
 import 'package:trackizer/common_widget/item_double_row.dart';
 import 'package:trackizer/common_widget/item_row.dart';
 import 'package:trackizer/common_widget/multi_select_category_row.dart';
-import 'package:trackizer/common_widget/multi_select_curr_row.dart';
 import 'package:trackizer/common_widget/multi_select_subs_status_row.dart';
 import 'package:trackizer/common_widget/secondary_button.dart';
 import 'package:trackizer/entities/Categories.dart';
@@ -226,30 +224,30 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             child: Column(
                               children: [
                                 ItemRow(
-                                    title: "Name", value: nameValue,
+                                    title: S.of(context).name, value: nameValue,
                                     onValueChanged: _updateName),
                                 ItemRow(
-                                    title: "Description",
+                                    title: S.of(context).description,
                                     value: descValue,
                                     onValueChanged: _updateDescription),
                                 ItemDoubleRow(
-                                    title: "Price",
+                                    title: S.of(context).monthly_price,
                                     value: priceValue,
                                     onValueChanged: _updatePrice),
                                 ItemDateSelectRow(
-                                    title: "First Payment Date",
+                                    title: S.of(context).monthly_payment_date,
                                     selectedDate: firstPaymentValue,
                                     onDateChanged: _updateStartDate),
 
                                 MultiSelectCategoryRow(
-                                  title: "Update Category",
+                                  title: S.of(context).category,
                                   options: categoryList,
                                   selectedValue: category,
                                   onValueChanged: updateCategorySelectedOption,
                                 ),
 
                                 MultiSelectSubsStatusRow(
-                                  title: "Update Reminder",
+                                  title: S.of(context).subs_schedule,
                                   selectedValue: reminderValue,
                                   onValueChanged: updateSubStatusSelectedOption,
                                 ),

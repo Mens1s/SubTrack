@@ -40,8 +40,8 @@ class _MainTabViewState extends State<MainTabView> {
 
       final creditCard = CreditCard(
         id: 1,
-        cardName: 'Ahmetin Kartı',
-        cardHolderName: 'Ahmet Yiğit',
+        cardName: 'Kredi/Credit Card',
+        cardHolderName: 'User',
         expDate: '12/25',
         lastFourDigit: '1234',
       );

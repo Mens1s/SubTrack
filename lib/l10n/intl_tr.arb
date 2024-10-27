@@ -36,5 +36,15 @@
   "lets_start": "Haydi Başlayalım",
   "currency": "₺",
   "name": "İsim",
-  "category": "Kategori"
+  "category": "Kategori",
+  "selected_color": "Seçilen Renk",
+  "sub_start_date_choose": "Abonelik Başlangıç Tarihini Seçiniz",
+  "cat_not_null": "Kategori seçiniz veya ekleyiniz.",
+  "card_not_null": "Kart seçiniz veya ekleyiniz.",
+  "field_not_null": "Alanlar boş olamaz.",
+  "success": "İşlemleriniz başarıyla gerçekleştirildi.",
+  "monthly_sub_count"  : "Bu ayki abonelik",
+  "color"  : "Renk",
+  "budget_not_fit" : "Geçerli Bir Bütçe Giriniz. 0 Dan büyük değerler.",
+  "monthly_payment_date" : "Aylık ödeme tarihi"
 }
