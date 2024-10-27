@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trackizer/Enum/SubscriptionType.dart';
 import 'package:trackizer/common/color_extension.dart';
+import 'package:trackizer/common_widget/item_color_row.dart';
 import 'package:trackizer/common_widget/item_date_select_row.dart';
 import 'package:trackizer/common_widget/item_double_row.dart';
 import 'package:trackizer/common_widget/item_row.dart';
 import 'package:trackizer/common_widget/multi_select_category_row.dart';
 import 'package:trackizer/common_widget/multi_select_curr_row.dart';
+import 'package:trackizer/common_widget/multi_select_icon_row.dart';
 import 'package:trackizer/common_widget/multi_select_subs_status_row.dart';
 import 'package:trackizer/common_widget/secondary_button.dart';
 import 'package:trackizer/entities/Categories.dart';
@@ -17,70 +19,54 @@ import 'package:trackizer/generated//l10n.dart';
 import 'package:trackizer/services/CategoriesService.dart';
 import 'package:trackizer/services/SubscriptionService.dart';
 
-class SubscriptionInfoView extends StatefulWidget {
-  final Subscription sub;
-
-  const SubscriptionInfoView({super.key, required this.sub});
+class CategoryAddView extends StatefulWidget {
+  const CategoryAddView({super.key});
 
   @override
-  State<SubscriptionInfoView> createState() => _SubscriptionInfoViewState();
+  State<CategoryAddView> createState() => _CategoryAddViewState();
 }
 
-class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
-  String currencyValue = "";
+class _CategoryAddViewState extends State<CategoryAddView> {
   String nameValue = "";
-  String descValue = "";
-  SubscriptionStatus reminderValue = SubscriptionStatus.canceled;
-  double priceValue = 0;
-  DateTime firstPaymentValue = DateTime.now();
+  String iconValue = "";
+  String iconVisibleValue = "";
+  double budgetValue = 0;
+  Color colorValue = Colors.white;
 
-  Categories category = Categories(id: 1, icon:"", color: Colors.white, name: "name", budget: 1, inUseBudget: 1, lastUpdatedTime: DateTime.now());
   List<Categories> categoryList = [];
 
   Future<void> _getInitialValues() async {
-
     setState(() {
-      currencyValue = '\$';
-      nameValue = widget.sub.name;
-      descValue = widget.sub.desc;
-      reminderValue = widget.sub.subscriptionStatus;
-      priceValue = widget.sub.price;
-      firstPaymentValue = widget.sub.startDate;
-    });
-
-  }
-
-  Future<void> _getCategories() async {
-    final catService = CategoriesService();
-    // Fetch credit cards
-    List<Categories> cat = await catService.getCategoriess();
-    setState(() {
-      categoryList = cat;
-    });
-    for (var c in cat) {
-      if (c.id == widget.sub.categoryId) {
-        setState(() {
-          category = c;
-        });
-      }
-    }
-  }
-
-  void updateCategorySelectedOption(Categories newValue) {
-    setState(() {
-      category = newValue; // Seçimi güncelle
+      nameValue = "New Category";
+      iconValue = "assets/img/auto_&_transport.png";
+      iconVisibleValue = 'auto_&_transport';
+      budgetValue = 10;
+      colorValue = Colors.red;
     });
   }
 
-  void updateSubStatusSelectedOption(SubscriptionStatus newValue) {
+  void updateColorValue(Color newValue) {
     setState(() {
-      reminderValue = newValue; // Seçimi güncelle
+      colorValue = newValue; // Seçimi güncelle
     });
   }
 
-  void updateCurrencySelectedOption(String newValue) {
+  void updateBudgetValue(double newValue) {
     setState(() {
-      currencyValue = newValue; // Seçimi güncelle
+      budgetValue = newValue; // Seçimi güncelle
+    });
+  }
+
+  void updateIconValue(String newValue) {
+    setState(() {
+      iconValue = newValue; // Seçimi güncelle
+      iconVisibleValue = iconValue.split('/')[2].split('.')[0];
+    });
+  }
+
+  void updateNameValue(String newValue) {
+    setState(() {
+      nameValue = newValue; // Seçimi güncelle
     });
   }
 
@@ -88,40 +74,12 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
   void initState() {
     super.initState(); // Call the initialization method
     _getInitialValues();
-    _getCategories();
   }
-
-  void _updateName(String newValue) {
-    setState(() {
-      nameValue = newValue;
-    });
-  }
-
-  void _updateDescription(String newValue) {
-    setState(() {
-      descValue = newValue;
-    });
-  }
-
-  void _updateStartDate(DateTime newValue) {
-    setState(() {
-      firstPaymentValue = newValue;
-    });
-  }
-
-  void _updatePrice(double newValue) {
-    setState(() {
-      priceValue = newValue;
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.sizeOf(context);
-    currencyValue = "Curr: (${S
-        .of(context)
-        .currency})";
+
     return Scaffold(
       backgroundColor: TColor.gray,
       body: SingleChildScrollView(
@@ -161,9 +119,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                                     color: TColor.gray30),
                               ),
                               Text(
-                                S
-                                    .of(context)
-                                    .subscription_info,
+                                "Kategori Ekleme",
                                 style: TextStyle(
                                     color: TColor.gray30, fontSize: 16),
                               ),
@@ -180,7 +136,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                           ),
                           const Spacer(),
                           Image.asset(
-                            widget.sub.logo,
+                            iconValue,
                             width: media.width * 0.25,
                             height: media.width * 0.25,
                           ),
@@ -188,7 +144,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             height: 20,
                           ),
                           Text(
-                            widget.sub.name,
+                            nameValue,
                             style: TextStyle(
                               color: TColor.white,
                               fontSize: 32,
@@ -199,9 +155,7 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             height: 15,
                           ),
                           Text(
-                            "${S
-                                .of(context)
-                                .currency} ${widget.sub.price}",
+                            "${S.of(context).currency} ${budgetValue}",
                             style: TextStyle(
                               color: TColor.gray30,
                               fontSize: 20,
@@ -226,33 +180,21 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             child: Column(
                               children: [
                                 ItemRow(
-                                    title: "Name", value: nameValue,
-                                    onValueChanged: _updateName),
-                                ItemRow(
-                                    title: "Description",
-                                    value: descValue,
-                                    onValueChanged: _updateDescription),
+                                    title: "Name",
+                                    value: nameValue,
+                                    onValueChanged: updateNameValue),
+                                MultiSelectIconRow(
+                                    title: "Icon",
+                                    selectedValue: iconVisibleValue,
+                                    onValueChanged: updateIconValue),
                                 ItemDoubleRow(
-                                    title: "Price",
-                                    value: priceValue,
-                                    onValueChanged: _updatePrice),
-                                ItemDateSelectRow(
-                                    title: "First Payment Date",
-                                    selectedDate: firstPaymentValue,
-                                    onDateChanged: _updateStartDate),
-
-                                MultiSelectCategoryRow(
-                                  title: "Update Category",
-                                  options: categoryList,
-                                  selectedValue: category,
-                                  onValueChanged: updateCategorySelectedOption,
-                                ),
-
-                                MultiSelectSubsStatusRow(
-                                  title: "Update Reminder",
-                                  selectedValue: reminderValue,
-                                  onValueChanged: updateSubStatusSelectedOption,
-                                ),
+                                    title: "Budget",
+                                    value: budgetValue,
+                                    onValueChanged: updateBudgetValue),
+                                ItemColorRow(
+                                    title: "Color",
+                                    value: colorValue,
+                                    onValueChanged: updateColorValue),
                               ],
                             ),
                           ),
@@ -260,43 +202,32 @@ class _SubscriptionInfoViewState extends State<SubscriptionInfoView> {
                             height: 20,
                           ),
                           SecondaryButton(
-                            title: S
-                                .of(context)
-                                .save,
+                            title: S.of(context).save,
                             onPressed: () {
-                              var updatedSubscription =
-                              Subscription(id: 1,
-                                  categoryId: category.id,
-                                  cardId: widget.sub.cardId,
+                              if (nameValue.isNotEmpty &&
+                                  iconValue.isNotEmpty) {
+                                var categoryService = CategoriesService();
+                                var ctg = new Categories(
+                                  id: 1,
                                   name: nameValue,
-                                  desc: descValue,
-                                  logo: widget.sub.logo,
-                                  price: priceValue,
-                                  startDate: firstPaymentValue,
-                                  endDate: widget.sub.endDate,
-                                  subscriptionStatus: reminderValue);
-                              // Null kontrolü
-                              if (updatedSubscription.name != null &&
-                                  updatedSubscription.categoryId != null &&
-                                  updatedSubscription.cardId != null &&
-                                  updatedSubscription.price != null &&
-                                  updatedSubscription.startDate != null &&
-                                  updatedSubscription.endDate != null &&
-                                  updatedSubscription.subscriptionStatus != null) {
-                                var subService = SubscriptionService();
-                                subService.updateSubscription(
-                                    updatedSubscription);
+                                  icon: iconValue,
+                                  budget: budgetValue,
+                                  inUseBudget: 0,
+                                  color: colorValue,
+                                  lastUpdatedTime: DateTime.now(),
+                                );
+                                categoryService.addCategories(ctg);
 
-                                // Güncelleme başarılıysa Snackbar gös6ter
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(
-                                      'Subscription updated successfully!')),
+                                  SnackBar(
+                                      content: Text(
+                                          'Subscription updated successfully!')),
                                 );
                               } else {
-                                // Eksik veya null değer varsa Snackbar ile uyarı göster
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(
-                                      'Please fill all fields before saving.')),
+                                  SnackBar(
+                                      content: Text(
+                                          'Please fill all fields before saving.')),
                                 );
                               }
                             },

@@ -34,5 +34,7 @@
   "subscription_info": "Subscription Info",
   "welcome_screen_message": "How about controlling all your expenses\n under one roof?",
   "lets_start": "Let's Get Started",
-  "currency": "$"
+  "currency": "$",
+  "name": "Name",
+  "category": "category"
 }

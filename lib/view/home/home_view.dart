@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:trackizer/Enum/SubscriptionType.dart';
 import 'package:trackizer/common/color_extension.dart';
+import 'package:trackizer/entities/Subscription.dart';
+import 'package:trackizer/services/SubscriptionService.dart';
 import 'package:trackizer/view/subscription_info/subscription_info_view.dart';
 import 'package:trackizer/generated//l10n.dart';
 import '../../common_widget/customer_arc_painter.dart';
@@ -16,37 +19,45 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  List<Subscription> subscriptionList = [];
+  List<Subscription> subscriptionOrderedList = [];
+  var activeSub = 0;
+  double highestSub = -1;
+  double lowestSub = 1;
+  double totalSubTrack = 0;
+  Future<void> _getSubscription() async {
+    final subscriptionService = SubscriptionService();
+
+    // Fetch credit cards
+    List<Subscription> subs = await subscriptionService.getSubscriptions();
+    subs.sort((a,b) => a.price.compareTo(b.price));
+
+    // Update the state with the fetched cards
+    setState(() {
+      activeSub = subs.length;
+      subscriptionList = subs; // Assign the fetched cards to the list
+      highestSub = subs.last.price;
+      lowestSub = subs.first.price;
+
+      for(var s in subs){
+        totalSubTrack += s.price;
+      }
+    });
+
+
+    setState(() {
+      subs.sort((a, b) => a.startDate.compareTo(b.startDate));
+      subscriptionOrderedList = subs; // Assign the fetched cards to the list
+    });
+  }
+
   bool isSubscription = true;
-  List subArr = [
-    {"name": "Spotify", "icon": "assets/img/spotify_logo.png", "price": "5.99"},
-    {
-      "name": "YouTube Premium",
-      "icon": "assets/img/youtube_logo.png",
-      "price": "18.99"
-    },
-    {
-      "name": "Microsoft OneDrive",
-      "icon": "assets/img/onedrive_logo.png",
-      "price": "29.99"
-    },
-    {"name": "Netflix", "icon": "assets/img/netflix_logo.png", "price": "15.00"}
-  ];
 
-  List billArr = [
-    {"name": "Spotify", "date": DateTime(2023, 07, 25), "price": "5.99"},
-    {
-      "name": "YouTube Premium",
-      "date": DateTime(2023, 07, 26),
-      "price": "18.99"
-    },
-    {
-      "name": "Microsoft OneDrive",
-      "date": DateTime(2023, 07, 27),
-      "price": "29.99"
-    },
-    {"name": "Netflix", "date": DateTime(2023, 07, 28), "price": "15.00"}
-  ];
-
+  @override
+  void initState() {
+    super.initState(); // Call the initialization method
+    _getSubscription();
+  }
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.sizeOf(context);
@@ -91,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
                         height: media.width * 0.05,
                       ),
                       Text(
-                        "${S.of(context).currency}2,002",
+                        "${S.of(context).currency}$totalSubTrack",
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 40,
@@ -142,7 +153,7 @@ class _HomeViewState extends State<HomeView> {
                             Expanded(
                               child: StatusButton(
                                 title: S.of(context).active_subs,
-                                value: "12",
+                                value: activeSub.toString(),
                                 statusColor: TColor.secondary,
                                 onPressed: () {},
                               ),
@@ -153,7 +164,7 @@ class _HomeViewState extends State<HomeView> {
                             Expanded(
                               child: StatusButton(
                                 title: S.of(context).highest_sub,
-                                value: "${S.of(context).currency}19.99",
+                                value: "${S.of(context).currency} $highestSub",
                                 statusColor: TColor.primary10,
                                 onPressed: () {},
                               ),
@@ -164,7 +175,7 @@ class _HomeViewState extends State<HomeView> {
                             Expanded(
                               child: StatusButton(
                                 title: S.of(context).lowest_sub,
-                                value: "${S.of(context).currency}5.99",
+                                value: "${S.of(context).currency} $lowestSub",
                                 statusColor: TColor.secondaryG,
                                 onPressed: () {},
                               ),
@@ -216,12 +227,12 @@ class _HomeViewState extends State<HomeView> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: subArr.length,
+                  itemCount: subscriptionList.length,
                   itemBuilder: (context, index) {
-                    var sObj = subArr[index] as Map? ?? {};
-                    return SubscriptionHomeRow(sObj: sObj, onPressed: () {
+                    var sub = subscriptionList[index] as Subscription? ?? Subscription(id: 1, categoryId: 1, cardId: 1, name: "name", desc: "desc", logo: "logo", price: 111, startDate: DateTime.now(), endDate: DateTime.now(), subscriptionStatus: SubscriptionStatus.canceled);
+                    return SubscriptionHomeRow(sub: sub, onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SubscriptionInfoView(sObj:sObj)));
+                          MaterialPageRoute(builder: (context) => SubscriptionInfoView(sub:sub)));
                     });
                   }),
             if (!isSubscription)
@@ -230,10 +241,10 @@ class _HomeViewState extends State<HomeView> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: billArr.length,
+                  itemCount: subscriptionOrderedList.length,
                   itemBuilder: (context, index) {
-                    var sObj = billArr[index] as Map? ?? {};
-                    return UpcomingBillsRow(sObj: sObj, onPressed: () {});
+                    var sub = subscriptionOrderedList[index] as Subscription? ?? Subscription(id: 1, categoryId: 1, cardId: 1, name: "name", desc: "desc", logo: "logo", price: 111, startDate: DateTime.now(), endDate: DateTime.now(), subscriptionStatus: SubscriptionStatus.canceled);
+                    return UpcomingBillsRow(sub: sub, onPressed: () {});
                   }),
             const SizedBox(
               height: 110,

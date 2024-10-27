@@ -1,11 +1,21 @@
+import 'dart:ffi';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/primary_button.dart';
+import 'package:trackizer/common_widget/round_datefield.dart';
 import 'package:trackizer/common_widget/round_textfield.dart';
+import 'package:trackizer/entities/Categories.dart';
+import 'package:trackizer/entities/CreditCard.dart';
+import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/generated//l10n.dart';
+import 'package:trackizer/services/CategoriesService.dart';
+import 'package:trackizer/services/CreditCardService.dart';
+import 'package:trackizer/services/SubscriptionService.dart';
 import '../../common_widget/image_button.dart';
+import 'package:trackizer/Enum/SubscriptionType.dart';
 
 class AddSubScriptionView extends StatefulWidget {
   const AddSubScriptionView({super.key});
@@ -14,9 +24,104 @@ class AddSubScriptionView extends StatefulWidget {
   State<AddSubScriptionView> createState() => _AddSubScriptionViewState();
 }
 
+class SubscriptionOptionsDialog extends StatelessWidget {
+  final Function(SubscriptionStatus) onSelected;
+
+  const SubscriptionOptionsDialog({Key? key, required this.onSelected})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.black87, // Dark background
+      title: Text(
+        'Select Subscription Type',
+        style: TextStyle(color: Colors.white),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: Text('Daily', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              onSelected(SubscriptionStatus.daily);
+              Navigator.of(context).pop(); // Close dialog
+            },
+          ),
+          ListTile(
+            title: Text('Weekly', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              onSelected(SubscriptionStatus.weekly);
+              Navigator.of(context).pop(); // Close dialog
+            },
+          ),
+          ListTile(
+            title: Text('Monthly', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              onSelected(SubscriptionStatus.monthly);
+              Navigator.of(context).pop(); // Close dialog
+            },
+          ),
+          ListTile(
+            title: Text('Daily', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              onSelected(SubscriptionStatus.daily);
+              Navigator.of(context).pop(); // Close dialog
+            },
+          ),
+          ListTile(
+            title: Text('One-time', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              onSelected(SubscriptionStatus.onetime);
+              Navigator.of(context).pop(); // Close dialog
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _AddSubScriptionViewState extends State<AddSubScriptionView> {
-  TextEditingController txtDescription = TextEditingController();
+  TextEditingController txtName = TextEditingController();
+  TextEditingController txtDate = TextEditingController();
   TextEditingController txtAmount = TextEditingController();
+
+  List<CreditCard> creditCardList = [];
+
+  Future<void> _getCreditCards() async {
+    final creditCardService = CreditCardService();
+
+    // Fetch credit cards
+    List<CreditCard> cards = await creditCardService.getCreditCards();
+
+    // Update the state with the fetched cards
+    setState(() {
+      creditCardList = cards; // Assign the fetched cards to the list
+    });
+  }
+
+  List<Categories> categoryList = [];
+
+  Future<void> _getCategoriesList() async {
+    final categoriesService = CategoriesService();
+
+    // Fetch credit cards
+    List<Categories> cat = await categoriesService.getCategoriess();
+
+    // Update the state with the fetched cards
+    setState(() {
+      categoryList = cat; // Assign the fetched cards to the list
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    txtAmount.text = amountVal.toStringAsFixed(2);
+    _getCreditCards();
+    _getCategoriesList();
+  }
 
   List subArr = [
     {"name": "HBO GO", "icon": "assets/img/hbo_logo.png"},
@@ -29,13 +134,12 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
     {"name": "NetFlix", "icon": "assets/img/netflix_logo.png"}
   ];
 
-  double amountVal = 0.09;
+  CreditCard? selectedCard;
+  Categories? selectedCategory;
 
-  @override
-  void initState() {
-    super.initState();
-    txtAmount.text = amountVal.toStringAsFixed(2);
-  }
+  double amountVal = 0.09;
+  String imageUrl = "";
+  int imageIndex = 0;
 
   void updateAmount(String value) {
     setState(() {
@@ -83,7 +187,7 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                             Text(
                               S.of(context).newS,
                               style:
-                              TextStyle(color: TColor.gray30, fontSize: 16),
+                                  TextStyle(color: TColor.gray30, fontSize: 16),
                             )
                           ],
                         ),
@@ -117,7 +221,11 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                         itemBuilder: (BuildContext context, int itemIndex,
                             int pageViewIndex) {
                           var sObj = subArr[itemIndex] as Map? ?? {};
-
+                          imageUrl = sObj["icon"];
+                          imageIndex = itemIndex - 1;
+                          if (imageIndex == -1) {
+                            imageIndex = subArr.length - 1;
+                          }
                           return Container(
                             margin: const EdgeInsets.all(10),
                             child: Column(
@@ -147,14 +255,23 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                 ),
               ),
             ),
-
             Padding(
-                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                child: RoundTextField(title: S.of(context).description, titleAlign: TextAlign.center,controller: txtDescription )
+                padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                child: RoundTextField(
+                  title: S.of(context).name,
+                  titleAlign: TextAlign.center,
+                  controller: txtName,
+                )),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: RoundDateField(
+                title: "Başlangıç Tarihi Seçin",
+                titleAlign: TextAlign.center, // Başlık metnini ortalamak için
+                controller: txtDate,
+              ),
             ),
-
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -162,12 +279,12 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                     image: "assets/img/minus.png",
                     onPressed: () {
                       setState(() {
-                        amountVal = (amountVal - 0.1).clamp(0.0, double.infinity);
+                        amountVal =
+                            (amountVal - 0.1).clamp(0.0, double.infinity);
                         txtAmount.text = amountVal.toStringAsFixed(2);
                       });
                     },
                   ),
-
                   Column(
                     children: [
                       Text(
@@ -177,16 +294,18 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                             fontSize: 12,
                             fontWeight: FontWeight.w600),
                       ),
-
-                      const SizedBox(height: 4,),
-
+                      const SizedBox(
+                        height: 4,
+                      ),
                       SizedBox(
                         width: 220,
                         child: TextField(
                           controller: txtAmount,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d{0,2}'))
                           ],
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -199,11 +318,9 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                           ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 8,
                       ),
-
                       Container(
                         width: 150,
                         height: 1,
@@ -211,7 +328,6 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
                       )
                     ],
                   ),
-
                   ImageButton(
                     image: "assets/img/plus.png",
                     onPressed: () {
@@ -225,9 +341,150 @@ class _AddSubScriptionViewState extends State<AddSubScriptionView> {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Kredi Kartı Seçimi
+                  Expanded(
+                    child: DropdownButton<CreditCard>(
+                      value: selectedCard,
+                      // Seçili kartı gösteren değişken
+                      hint: Text(
+                        S.of(context).card_name, // Kredi kartı seçin metni
+                        style: TextStyle(color: TColor.gray40),
+                      ),
+                      icon: const Icon(Icons.arrow_drop_down,
+                          color: Colors.white),
+                      items: creditCardList
+                          .map<DropdownMenuItem<CreditCard>>((CreditCard card) {
+                        return DropdownMenuItem<CreditCard>(
+                          value: card, // Use the actual CreditCard object here
+                          child: Text(
+                            card.cardName,
+                            style: TextStyle(color: TColor.white),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (CreditCard? newValue) {
+                        setState(() {
+                          selectedCard = newValue!;
+                        });
+                      },
+                      dropdownColor: TColor.gray70,
+                      // Dropdown arka plan rengi
+                      isExpanded: true,
+                    ),
+                  ),
+
+                  const SizedBox(width: 20), // Araya boşluk ekle
+
+                  // Kategori Seçimi
+                  Expanded(
+                    child: DropdownButton<Categories>(
+                      value: selectedCategory,
+                      // Seçili kategori
+                      hint: Text(
+                        S.of(context).category, // Kategori seçin metni
+                        style: TextStyle(color: TColor.gray40),
+                      ),
+                      icon: const Icon(Icons.arrow_drop_down,
+                          color: Colors.white),
+                      items: categoryList.map<DropdownMenuItem<Categories>>(
+                          (Categories category) {
+                        return DropdownMenuItem<Categories>(
+                          value: category,
+                          child: Text(
+                            category.getName,
+                            style: TextStyle(color: TColor.white),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (Categories? newValue) {
+                        setState(() {
+                          selectedCategory = newValue!;
+                        });
+                      },
+                      dropdownColor: TColor.gray70,
+                      // Dropdown arka plan rengi
+                      isExpanded: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child:
-              PrimaryButton(title: S.of(context).add_this_platform, onPressed: () {}),
+              child: PrimaryButton(
+                title: S.of(context).add_this_platform,
+                onPressed: () async {
+                  print(imageIndex);
+
+                  if (selectedCategory == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Category cannot be null."),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  } else if (selectedCard == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Card cannot be null.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  } else if (txtName.text.isEmpty || txtDate.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Field cannot be null.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+                  // Show the subscription options dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SubscriptionOptionsDialog(
+                        onSelected: (SubscriptionStatus status) async {
+                          // Create your subscription service and add subscription here
+                          final service = SubscriptionService();
+                          final subscription = Subscription(
+                            id: 1,
+                            categoryId: selectedCategory!.getId,
+                            cardId: selectedCard!.getId,
+                            name: txtName.text,
+                            desc: txtName.text,
+                            logo: subArr[imageIndex]["icon"],
+                            price: double.parse(txtAmount.text),
+                            startDate: DateTime.parse(txtDate.text),
+                            endDate: DateTime(DateTime.now().year, 12, 31),
+                            // Change duration based on status
+                            subscriptionStatus:
+                                status, // Use the selected status
+                          );
+
+                          await service.addSubscription(subscription);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Başarıyla eklendi!"),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          // Close the dialog
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
             const SizedBox(
               height: 20,

@@ -34,5 +34,7 @@
   "subscription_info": "Abonelik Bilgisi",
   "welcome_screen_message": "Tüm harcamalarınızı\n tek çatı altında yönetmeye ne dersiniz?",
   "lets_start": "Haydi Başlayalım",
-  "currency": "₺"
+  "currency": "₺",
+  "name": "İsim",
+  "category": "Kategori"
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class SubscriptionHomeRow extends StatelessWidget {
-  final Map sObj;
+  final Subscription sub;
   final VoidCallback onPressed;
 
   const SubscriptionHomeRow(
-      {super.key, required this.sObj, required this.onPressed});
+      {super.key, required this.sub, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class SubscriptionHomeRow extends StatelessWidget {
             children: [
 
               Image.asset(
-                sObj["icon"],
+                sub.logo,
                 width: 40,
                 height: 40,
               ),
@@ -39,7 +40,7 @@ class SubscriptionHomeRow extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  sObj["name"],
+                  sub.name,
                   style: TextStyle(
                     color: TColor.white,
                     fontSize: 14,
@@ -51,7 +52,7 @@ class SubscriptionHomeRow extends StatelessWidget {
                 width: 8,
               ),
               Text(
-                "${S.of(context).currency}${sObj["price"]}",
+                "${S.of(context).currency}${sub.price}",
                 style: TextStyle(
                   color: TColor.white,
                   fontSize: 14,

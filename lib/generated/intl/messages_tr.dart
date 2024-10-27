@@ -35,6 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "calender": MessageLookupByLibrary.simpleMessage("Takvim"),
         "cancel": MessageLookupByLibrary.simpleMessage("İptal"),
         "card_name": MessageLookupByLibrary.simpleMessage("Kart Adı"),
+        "category": MessageLookupByLibrary.simpleMessage("Kategori"),
         "credit_cards": MessageLookupByLibrary.simpleMessage("Kredi Kartları"),
         "currency": MessageLookupByLibrary.simpleMessage("₺"),
         "description": MessageLookupByLibrary.simpleMessage("Açıklama"),
@@ -56,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "monthly_expenses":
             MessageLookupByLibrary.simpleMessage("Aylık Giderler"),
         "monthly_price": MessageLookupByLibrary.simpleMessage("Aylık fiyat"),
+        "name": MessageLookupByLibrary.simpleMessage("İsim"),
         "newS": MessageLookupByLibrary.simpleMessage("Yeni"),
         "save": MessageLookupByLibrary.simpleMessage("Kaydet"),
         "subs_schedule":

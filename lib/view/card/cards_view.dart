@@ -5,6 +5,10 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
+import 'package:trackizer/entities/CreditCard.dart';
+import 'package:trackizer/entities/Subscription.dart';
+import 'package:trackizer/services/CreditCardService.dart';
+import 'package:trackizer/services/SubscriptionService.dart';
 import 'package:trackizer/view/calender/calender_view.dart';
 import 'package:trackizer/generated//l10n.dart';
 
@@ -18,53 +22,51 @@ class CardsView extends StatefulWidget {
 
 
 class _CardsViewState extends State<CardsView> {
-  List subArr = [
-    {"name": "Spotify", "icon": "assets/img/spotify_logo.png", "price": "5.99"},
-    {
-      "name": "YouTube Premium",
-      "icon": "assets/img/youtube_logo.png",
-      "price": "18.99"
-    },
-    {
-      "name": "Microsoft OneDrive",
-      "icon": "assets/img/onedrive_logo.png",
-      "price": "29.99"
-    },
-    {"name": "NetFlix", "icon": "assets/img/netflix_logo.png", "price": "15.00"}
-  ];
 
-  List carArr = [
-    {
-      "name":"Virtual Card",
-      "holder_name": "code for any1",
-      "number": "**** **** **** 2197",
-      "month_year": "08/27"
-    },
-    {
-      "name":"Virtual Card",
-      "holder_name": "code for any1",
-      "number": "**** **** **** 2198",
-      "month_year": "09/27"
-    },
-    {
-      "name":"Virtual Card",
-      "holder_name": "code for any1",
-      "number": "**** **** **** 2297",
-      "month_year": "07/27"
-    },
-    {
-      "name":"Virtual Card",
-      "holder_name": "code for any1",
-      "number": "**** **** **** 2397",
-      "month_year": "05/27"
-    },
-  ];
+  int currentCardId = 1;
 
+
+  List<CreditCard> creditCardList = [];
+  Future<void> _getCreditCards() async {
+    final creditCardService = CreditCardService();
+
+    // Fetch credit cards
+    List<CreditCard> cards = await creditCardService.getCreditCards();
+
+    // Update the state with the fetched cards
+    setState(() {
+      creditCardList = cards; // Assign the fetched cards to the list
+    });
+  }
+
+  List<Subscription> subscriptionList = [];
+  List<Subscription> subscriptionViewList = [];
+
+  Future<void> _getSubscription() async {
+    final subscriptionService = SubscriptionService();
+
+    // Fetch credit cards
+    List<Subscription> subs = await subscriptionService.getSubscriptions();
+
+    // Update the state with the fetched cards
+    setState(() {
+      subscriptionList = subs; // Assign the fetched cards to the list
+      subscriptionViewList = subscriptionList.where((sub){
+        return sub.cardId == creditCardList[0].id;
+      }).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    _getCreditCards();
+    _getSubscription();
+  }
   SwiperController controller = SwiperController();
 
   Widget buildSwiper() {
     return Swiper(
-      itemCount: carArr.length,
+      itemCount: creditCardList.length,
       customLayoutOption: CustomLayoutOption(startIndex: -1, stateCount: 3)
         ..addRotate([-45.0 / 180, 0.0, 45.0 / 180])
         ..addTranslate([
@@ -74,7 +76,12 @@ class _CardsViewState extends State<CardsView> {
         ]),
       fade: 1.0,
       onIndexChanged: (index) {
-        print(index);
+        var creditCard = creditCardList[index] as CreditCard? ?? CreditCard(id: 1, cardName: "cardName", cardHolderName: "cardHolderName", lastFourDigit: "lastFourDigit", expDate: "expDate");
+        setState(() {
+          subscriptionViewList = subscriptionList.where((sub){
+            return sub.cardId == creditCard.id;
+          }).toList();
+        });
       },
       scale: 0.8,
       itemWidth: 232.0,
@@ -83,7 +90,9 @@ class _CardsViewState extends State<CardsView> {
       layout: SwiperLayout.STACK,
       viewportFraction: 0.8,
       itemBuilder: ((context, index) {
-        var cObj = carArr[index] as Map? ?? {};
+        var creditCard = creditCardList[index] as CreditCard? ?? CreditCard(id: 1, cardName: "cardName", cardHolderName: "cardHolderName", lastFourDigit: "lastFourDigit", expDate: "expDate");
+        currentCardId = creditCard.getId;
+
         return Container(
           decoration: BoxDecoration(
               color: TColor.gray70,
@@ -107,7 +116,7 @@ class _CardsViewState extends State<CardsView> {
                   height: 8,
                 ),
                 Text(
-                  cObj["name"] ?? "Code For Any",
+                  creditCard.getCardName ,
                   style: TextStyle(
                       color: TColor.white,
                       fontSize: 16,
@@ -117,7 +126,7 @@ class _CardsViewState extends State<CardsView> {
                   height: 115,
                 ),
                 Text(
-                  cObj["holder_name"] ?? "Code For Any",
+                  creditCard.getCardHolderName ,
                   style: TextStyle(
                       color: TColor.gray20,
                       fontSize: 12,
@@ -127,7 +136,7 @@ class _CardsViewState extends State<CardsView> {
                   height: 8,
                 ),
                 Text(
-                  cObj["number"] ?? "**** **** **** 2197",
+                  "**** **** **** " + creditCard.getLastFourDigit ,
                   style: TextStyle(
                       color: TColor.white,
                       fontSize: 16,
@@ -137,7 +146,7 @@ class _CardsViewState extends State<CardsView> {
                   height: 8,
                 ),
                 Text(
-                  cObj["month_year"] ?? "08/27",
+                  creditCard.getExpDate,
                   style: TextStyle(
                       color: TColor.white,
                       fontSize: 14,
@@ -194,15 +203,49 @@ class _CardsViewState extends State<CardsView> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                carArr.add({
-                  "name": nameController.text,
-                  "holder_name": holderNameController.text,
-                  "number": "**** **** **** ${numberController.text}",
-                  "month_year": expiryController.text,
-                });
+              setState(() async {
+                // Kredi kartı bilgilerini almak için TextEditingController'lar kullanıyoruz.
+                String cardName = nameController.text.trim();
+                String cardHolderName = holderNameController.text.trim();
+                String lastFourDigit = numberController.text.trim();
+                String expDate = expiryController.text.trim();
+
+                if (cardName.isEmpty || cardHolderName.isEmpty || lastFourDigit.isEmpty || expDate.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Lütfen tüm alanları doldurun!'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  CreditCardService service = CreditCardService();
+                  service.addCreditCard(
+                    CreditCard(
+                      id: 1,
+                      cardName: cardName,
+                      cardHolderName: cardHolderName,
+                      lastFourDigit: lastFourDigit,
+                      expDate: expDate,
+                    ),
+                  );
+                  final creditCardService = CreditCardService();
+
+                  // Fetch credit cards
+                  List<CreditCard> cards = await creditCardService.getCreditCards();
+                  setState(() {
+                    creditCardList = cards; // Assign the fetched cards to the list
+                  });
+
+                  // Başarılı mesajı göster
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Kredi kartı başarıyla eklendi!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+
+                }
               });
-              print("hellllooooooooo");
               Navigator.pop(context);
             },
             child: const Text("Save"),
@@ -242,27 +285,13 @@ class _CardsViewState extends State<CardsView> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Spacer(),
-                          IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                        const CalenderView()));
-                              },
-                              icon: Image.asset("assets/img/settings.png",
-                                  width: 25, height: 25, color: TColor.gray30))
-                        ],
-                      ),
+
                     ],
                   ),
                 ),
 
                 const SizedBox(
-                  height: 460,
+                  height: 500,
                 ),
 
                 Text(
@@ -273,19 +302,23 @@ class _CardsViewState extends State<CardsView> {
                       fontWeight: FontWeight.w600),
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: subArr.map((sObj) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      child: Image.asset(
-                        sObj["icon"],
-                        width: 45,
-                        height: 45,
-                      ),
-                    );
-                  }).toList(),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, // Yatay kaydırma
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: subscriptionViewList.map((sub) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                        child: Image.asset(
+                          sub.logo,
+                          width: 45,
+                          height: 45,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
+
 
                 const SizedBox(
                   height: 40,

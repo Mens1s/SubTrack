@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:calendar_agenda/calendar_agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:trackizer/Enum/SubscriptionType.dart';
 import 'package:trackizer/common/color_extension.dart';
+import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/generated//l10n.dart';
+import 'package:trackizer/services/SubscriptionService.dart';
 import '../../common_widget/subscription_cell.dart';
 
 class CalenderView extends StatefulWidget {
@@ -16,31 +19,83 @@ class CalenderView extends StatefulWidget {
 
 class _CalenderViewState extends State<CalenderView> {
   CalendarAgendaController calendarAgendaControllerNotAppBar =
-  CalendarAgendaController();
+      CalendarAgendaController();
   late DateTime selectedDateNotAppBBar;
+  String selectedMonth = DateFormat('MMMM').format(DateTime.now());
 
   String formattedDate = DateFormat("dd.MM.yyyy").format(DateTime.now());
   Random random = new Random();
 
-  List subArr = [
-    {"name": "Spotify", "icon": "assets/img/spotify_logo.png", "price": "5.99"},
-    {
-      "name": "YouTube Premium",
-      "icon": "assets/img/youtube_logo.png",
-      "price": "18.99"
-    },
-    {
-      "name": "Microsoft OneDrive",
-      "icon": "assets/img/onedrive_logo.png",
-      "price": "29.99"
-    },
-    {"name": "NetFlix", "icon": "assets/img/netflix_logo.png", "price": "15.00"}
-  ];
+  List<Subscription> subscriptionList = [];
+  List<DateTime> subscriptionDateList = [];
+
+  Future<void> _getSubscription() async {
+    final subscriptionService = SubscriptionService();
+    List<Subscription> subs = await subscriptionService.getSubscriptions();
+    subs.sort((a, b) => a.startDate.compareTo(b.startDate));
+
+    subscriptionDateList.clear(); // Önceden var olanları temizleyin
+
+    setState(() {
+
+      for (var c in subs) {
+        DateTime currentDate = c.startDate;
+        subscriptionDateList.add(currentDate);
+
+        if(c.startDate.month >= DateTime.now().month && !(c.endDate.month < DateTime.now().month)){
+          subscriptionList.add(c);
+
+          if (c.subscriptionStatus == SubscriptionStatus.weekly) {
+            for (int i = 0; i < 4; i++) {
+              DateTime weeklyDate = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                c.startDate.day + (i * 7),
+              );
+              subscriptionDateList.add(weeklyDate);
+            }
+          } else if (c.subscriptionStatus == SubscriptionStatus.monthly) {
+            DateTime monthlyDate = DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              c.startDate.day,
+            );
+            subscriptionDateList.add(monthlyDate);
+          } else if (c.subscriptionStatus == SubscriptionStatus.onetime && c.startDate.month == DateTime.now().month) {
+            DateTime oneTimeDate = DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              c.startDate.day,
+            );
+            subscriptionDateList.add(oneTimeDate);
+          }
+        }
+      }
+    });
+  }
+
+  double monthlyTotalPrice = 0.0;
+  int monthlySubsCount = 0;
+
+  Future<void> _getMonthlyExpenses() async {
+
+    final subscriptionService = SubscriptionService();
+    List<Subscription> subs = await subscriptionService
+        .getSubscriptionsByMonth(selectedDateNotAppBBar.month);
+    setState(() {
+      for(var s in subs){
+        monthlyTotalPrice += s.price;
+        ++monthlySubsCount;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     selectedDateNotAppBBar = DateTime.now();
+    _getSubscription();
+    _getMonthlyExpenses();
   }
 
   @override
@@ -79,8 +134,9 @@ class _CalenderViewState extends State<CalenderView> {
                                   ),
                                 ],
                               ),
-
-                             const SizedBox(height:25,)
+                              const SizedBox(
+                                height: 25,
+                              )
                             ],
                           ),
                           const SizedBox(
@@ -100,7 +156,7 @@ class _CalenderViewState extends State<CalenderView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "3 "+ S.of(context).subscription_for_today,
+                                monthlySubsCount.toString() + " Bu ayki abonelik",
                                 style: TextStyle(
                                     color: TColor.gray30,
                                     fontSize: 14,
@@ -109,7 +165,7 @@ class _CalenderViewState extends State<CalenderView> {
                               InkWell(
                                 borderRadius: BorderRadius.circular(12),
                                 onTap: () {
-                                  calendarAgendaControllerNotAppBar.openCalender();
+
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -122,21 +178,7 @@ class _CalenderViewState extends State<CalenderView> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   alignment: Alignment.center,
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "October", // orada yazan yazı sağ üst
-                                        style: TextStyle(
-                                            color: TColor.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Icon(
-                                        Icons.expand_more, color: TColor.white,
-                                        size: 16.0,
-                                      ),
-                                    ],
-                                  ),
+
                                 ),
                               )
                             ],
@@ -144,27 +186,41 @@ class _CalenderViewState extends State<CalenderView> {
                         ],
                       ),
                     ),
-
                     CalendarAgenda(
                       controller: calendarAgendaControllerNotAppBar,
                       backgroundColor: Colors.transparent,
                       fullCalendarBackgroundColor: TColor.gray80,
-                      locale: S.current.cancel.compareTo("cancel") == 0 ? 'en' : 'tr',
+                      locale: S.current.cancel.compareTo("cancel") == 0
+                          ? 'en'
+                          : 'tr',
                       weekDay: WeekDay.short,
                       fullCalendarDay: WeekDay.short,
                       selectedDateColor: TColor.white,
-                      initialDate: DateTime.now(),  // Başlangıç tarihi bugünden
+                      initialDate: DateTime.now(),
+                      // Başlangıç tarihi bugünden
                       calendarEventColor: TColor.secondary,
-                      firstDate: DateTime.now().subtract(const Duration(days: 140)),
+                      firstDate:
+                          DateTime.now().subtract(const Duration(days: 140)),
                       lastDate: DateTime.now().add(const Duration(days: 140)),
-                      events: List.generate(
-                          100,
-                              (index) => DateTime.now().add(  // subtract yerine add kullanıyoruz
-                              Duration(days: index * random.nextInt(5)))),  // Rastgele günler ekleniyor
-                      onDateSelected: (date) {
+                      events: subscriptionDateList,
+                      onDateSelected: (date) async {
                         setState(() {
-                          selectedDateNotAppBBar = date;
-                          // update yeri
+                          selectedDateNotAppBBar = date; // Tarih burada güncelleniyor
+                          formattedDate = DateFormat("dd.MM.yyyy").format(date);
+                        });
+
+                        final subscriptionService = SubscriptionService();
+                        List<Subscription> subs = await subscriptionService
+                            .getSubscriptionsByMonth(selectedDateNotAppBBar.month);
+
+                        setState(() {
+                          subscriptionList.clear();
+                          subscriptionList = subs;
+                          monthlyTotalPrice = 0;
+                          for(var s in subs){
+                            monthlyTotalPrice += s.price;
+                          }
+                          selectedMonth = DateFormat('MMMM').format(date);
                           formattedDate = DateFormat("dd.MM.yyyy").format(date);
                         });
                       },
@@ -196,13 +252,11 @@ class _CalenderViewState extends State<CalenderView> {
                       eventLogo: Container(
                         width: 5,
                         height: 5,
-                        decoration:  BoxDecoration(
-
+                        decoration: BoxDecoration(
                           color: TColor.secondary,
                           borderRadius: BorderRadius.circular(3),
                         ),
                       ),
-
                     ),
                   ],
                 ),
@@ -216,14 +270,14 @@ class _CalenderViewState extends State<CalenderView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "January",
+                        selectedMonth,
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "${S.of(context).currency}24.98",
+                        "${S.of(context).currency} $monthlyTotalPrice",
                         style: TextStyle(
                             color: TColor.white,
                             fontSize: 20,
@@ -262,12 +316,23 @@ class _CalenderViewState extends State<CalenderView> {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     childAspectRatio: 1),
-                itemCount: subArr.length,
+                itemCount: subscriptionList.length,
                 itemBuilder: (context, index) {
-                  var sObj = subArr[index] as Map? ?? {};
+                  var sub = subscriptionList[index] as Subscription? ??
+                      Subscription(
+                          id: 1,
+                          categoryId: 1,
+                          cardId: 1,
+                          name: "name",
+                          desc: "desc",
+                          logo: "logo",
+                          price: 1,
+                          startDate: DateTime.now(),
+                          endDate: DateTime.now(),
+                          subscriptionStatus: SubscriptionStatus.canceled);
 
                   return SubscriptionCell(
-                    sObj: sObj,
+                    sub: sub,
                     onPressed: () {},
                   );
                 }),

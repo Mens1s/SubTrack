@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trackizer/entities/Subscription.dart';
 import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class UpcomingBillsRow extends StatelessWidget {
-  final Map sObj;
+  final Subscription sub;
   final VoidCallback onPressed;
 
   const UpcomingBillsRow(
-      {super.key, required this.sObj, required this.onPressed});
+      {super.key, required this.sub, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class UpcomingBillsRow extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        sObj["date"].toString().substring(5,7),
+                        sub.startDate.toString().substring(5,7),
                         style: TextStyle(
                           color: TColor.gray30,
                           fontSize: 10,
@@ -45,7 +46,7 @@ class UpcomingBillsRow extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        sObj["date"].toString().substring(8,10),
+                        sub.startDate.toString().substring(8,10),
                         style: TextStyle(
                           color: TColor.gray30,
                           fontSize: 14,
@@ -60,7 +61,7 @@ class UpcomingBillsRow extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  sObj["name"],
+                  sub.name,
                   style: TextStyle(
                     color: TColor.white,
                     fontSize: 14,
@@ -72,7 +73,7 @@ class UpcomingBillsRow extends StatelessWidget {
                 width: 8,
               ),
               Text(
-                "${S.of(context).currency}${sObj["price"]}",
+                "${S.of(context).currency}${sub.price}",
                 style: TextStyle(
                   color: TColor.white,
                   fontSize: 14,

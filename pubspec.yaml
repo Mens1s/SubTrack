@@ -33,6 +33,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  shared_preferences: ^2.0.15
+  flutter_colorpicker: ^1.1.0
+
   intl_utils: ^2.8.7
 
   provider: ^6.1.2

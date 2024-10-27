@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:trackizer/common/color_extension.dart';
 import 'package:trackizer/common_widget/budgets_row.dart';
 import 'package:trackizer/common_widget/custom_arc_180_painter.dart';
+import 'package:trackizer/entities/Categories.dart';
 import 'package:trackizer/generated//l10n.dart';
+import 'package:trackizer/services/CategoriesService.dart';
+import 'package:trackizer/view/package/category_add_view.dart';
 
 class SpendingBudgetsView extends StatefulWidget {
   const SpendingBudgetsView({super.key});
@@ -12,8 +15,168 @@ class SpendingBudgetsView extends StatefulWidget {
   State<SpendingBudgetsView> createState() => _SpendingBudgetsViewState();
 }
 
+class CustomDialog extends StatelessWidget {
+  CustomDialog({Key? key}) : super(key: key);
+
+  final TextEditingController txtCategoryName = TextEditingController();
+  final TextEditingController txtBudget = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      backgroundColor: TColor.white,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              S.of(context).add_new_category,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: txtCategoryName,
+              decoration: InputDecoration(
+                labelText: S.of(context).category,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: txtBudget,
+              decoration: InputDecoration(
+                labelText: "Limit",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              keyboardType: TextInputType.number, // Sayı girişi için
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                String categoryName = txtCategoryName.text.trim();
+                String budgetText = txtBudget.text.trim();
+
+                // Bütçenin geçerli bir double değer olup olmadığını kontrol et
+                double? budget = double.tryParse(budgetText);
+
+                // Hata kontrolleri
+                if (categoryName.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Kategori adı boş olamaz."),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                if (budget == null || budget <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Geçerli bir bütçe girin."),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                // Kategori servisi örneği oluştur
+                var categoryService = CategoriesService();
+
+                // Kategori nesnesini oluştur
+                Categories newCategory = Categories(
+                  id: 1, // Gerekirse dinamik bir ID yönetimi ekleyebilirsiniz
+                  name: categoryName,
+                  icon: "",
+                  budget: budget,
+                  inUseBudget: 0,
+                  color: Colors.white,
+                    lastUpdatedTime: DateTime.now()
+                );
+
+
+                // Kategoriyi ekleme işlemi
+                await categoryService.addCategories(newCategory);
+
+                // Başarılı bir şekilde eklendiğinde kullanıcıya bildirim yap
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Kategori başarıyla eklendi."),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+
+                // Dialog'u kapatma
+                Navigator.of(context).pop();
+              },
+              child: Text(S.of(context).save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
 class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
-  List budgetArr = [
+
+  double usedBudget = 0;
+  double totalBudget = 0;
+  List<ArcValueModel> arcValueModelList = [];
+
+  List<Categories> categoryList = [];
+  Future<void> _getCategories() async {
+    final categoryService = CategoriesService();
+    List<ArcValueModel> tempArcValueModelList = [];
+
+
+    // Fetch credit cards
+    List<Categories> cats = await categoryService.getCategoriess();
+
+    // Update the state with the fetched cards
+    setState(() {
+      categoryList = cats; // Assign the fetched cards to the list
+    });
+
+    for(var c in cats){
+      setState(() {
+
+        usedBudget += c.inUseBudget; // Assign the fetched cards to the list
+        totalBudget += c.budget; // Assign the fetched cards to the list
+      });
+    }
+    var tempVal = 190.0;
+    for(var c in cats){
+      tempVal = c.inUseBudget/totalBudget * 100;
+      if(tempVal > 190){
+        tempVal = 190;
+      }
+      tempArcValueModelList.add(ArcValueModel(color: c.color, value: tempVal));
+    }
+
+    setState(() {
+      arcValueModelList = tempArcValueModelList;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCategories(); // Call the initialization method
+  }
+  List bs = [
     {
       "name": "Auto & Transport",
       "icon": "assets/img/auto_&_transport.png",
@@ -49,9 +212,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              height: 64,
-            ),
+            const SizedBox(height: 64),
             Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -60,11 +221,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                   height: media.width * 0.3,
                   child: CustomPaint(
                     painter: CustomArc180Painter(
-                      drwArcs: [
-                        ArcValueModel(color: TColor.secondaryG, value: 20),
-                        ArcValueModel(color: TColor.secondary, value: 50),
-                        ArcValueModel(color: TColor.primary10, value: 70),
-                      ],
+                      drwArcs: arcValueModelList,
                       end: 50,
                       width: 12,
                       bgWidth: 8,
@@ -74,7 +231,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                 Column(
                   children: [
                     Text(
-                      "${S.of(context).currency}82,90",
+                      "${S.of(context).currency} $usedBudget",
                       style: TextStyle(
                         color: TColor.white,
                         fontSize: 24,
@@ -82,7 +239,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                       ),
                     ),
                     Text(
-                      "/ ${S.of(context).currency}2000,00 "+ S.of(context).budget,
+                      "/ ${S.of(context).currency} $totalBudget " + S.of(context).budget,
                       style: TextStyle(
                         color: TColor.gray30,
                         fontSize: 12,
@@ -90,12 +247,10 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
-            const SizedBox(
-              height: 40,
-            ),
+            const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: InkWell(
@@ -128,20 +283,25 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
               ),
             ),
             ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: budgetArr.length,
-                itemBuilder: (context, index) {
-                  var bObj = budgetArr[index] as Map? ?? {};
-                  return BudgetsRow(bObj: bObj, onPressed: () {});
-                }),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: categoryList.length,
+              itemBuilder: (context, index) {
+                var bObj = categoryList[index] as Categories? ?? Categories(id: 1, name: "name", icon: "", color: Colors.white, budget: 1, inUseBudget: 1,lastUpdatedTime: DateTime.now());
+                return BudgetsRow(category: bObj, onPressed: () {});
+              },
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CategoryAddView()
+                  );
+                },
                 child: DottedBorder(
                   dashPattern: const [5, 4],
                   strokeWidth: 1,
@@ -152,9 +312,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                     height: 64,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        16,
-                      ),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     alignment: Alignment.center,
                     child: Row(
@@ -180,9 +338,7 @@ class _SpendingBudgetsViewState extends State<SpendingBudgetsView> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 110,
-            ),
+            const SizedBox(height: 110),
           ],
         ),
       ),

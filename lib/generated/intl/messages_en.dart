@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "calender": MessageLookupByLibrary.simpleMessage("Calender"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "card_name": MessageLookupByLibrary.simpleMessage("Card Name"),
+        "category": MessageLookupByLibrary.simpleMessage("category"),
         "credit_cards": MessageLookupByLibrary.simpleMessage("Credit Cards"),
         "currency": MessageLookupByLibrary.simpleMessage("\$"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
@@ -54,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "monthly_expenses":
             MessageLookupByLibrary.simpleMessage("Monthly Expenses"),
         "monthly_price": MessageLookupByLibrary.simpleMessage("Monthly price"),
+        "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newS": MessageLookupByLibrary.simpleMessage("New"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "subs_schedule":

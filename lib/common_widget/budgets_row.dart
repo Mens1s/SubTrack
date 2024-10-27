@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trackizer/entities/Categories.dart';
 import 'package:trackizer/generated//l10n.dart';
 import '../common/color_extension.dart';
 
 class BudgetsRow extends StatelessWidget {
-  final Map bObj;
+  final Categories category;
   final VoidCallback onPressed;
 
-  const BudgetsRow({super.key, required this.bObj, required this.onPressed});
+  const BudgetsRow({super.key, required this.category, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    var proVal = (double.tryParse(bObj["spend_amount"]) ?? 0) / (double.tryParse(bObj["total_budget"]) ?? 1);
+    var proVal = (category.inUseBudget / category.budget);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -36,7 +37,7 @@ class BudgetsRow extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Image.asset(
-                      bObj["icon"],
+                      category.icon,
                       width: 30,
                       height: 30,
                       color: TColor.gray40,
@@ -51,7 +52,7 @@ class BudgetsRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          bObj["name"],
+                          category.name,
                           style: TextStyle(
                             color: TColor.white,
                             fontSize: 14,
@@ -59,7 +60,7 @@ class BudgetsRow extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${S.of(context).currency}${bObj["left_amount"]} ${S.of(context).left_to_spent}",
+                          "${S.of(context).currency}${category.budget-category.inUseBudget} ${S.of(context).left_to_spent}",
                           style: TextStyle(
                             color: TColor.gray30,
                             fontSize: 12,
@@ -77,7 +78,7 @@ class BudgetsRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${S.of(context).currency}${bObj["spend_amount"]}",
+                        "${S.of(context).currency}${category.inUseBudget}",
                         style: TextStyle(
                           color: TColor.white,
                           fontSize: 14,
@@ -85,7 +86,7 @@ class BudgetsRow extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "of ${S.of(context).currency}${bObj["total_budget"]}",
+                        "of ${S.of(context).currency}${category.budget}",
                         style: TextStyle(
                           color: TColor.gray30,
                           fontSize: 12,
@@ -99,7 +100,7 @@ class BudgetsRow extends StatelessWidget {
               const SizedBox(height: 8,),
               LinearProgressIndicator(
                 backgroundColor: TColor.gray60,
-                valueColor: AlwaysStoppedAnimation( bObj["color"]),
+                valueColor: AlwaysStoppedAnimation( category.color),
                 minHeight: 3,
                 value: proVal,
               )
